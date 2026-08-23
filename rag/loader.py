@@ -9,7 +9,7 @@
 
 import os
 import re
-from pdfminer.high_level import extract_text
+import fitz  # PyMuPDF
 
 # ── 分块参数 ──────────────────────────────────────────────
 CHUNK_TARGET = 400      # 目标块长度（字符）
@@ -27,8 +27,32 @@ def _is_garbage(text):
     return bad / len(text) > GARBAGE_RATIO
 
 
+def _repair_pua_digits(text):
+    """修复 PDF 字体把数字映射到 Unicode 私有区（PUA）的乱码。
+
+    现象: "成立于 2010 年" 抽出为 "成立于  年"。
+    原因: 该 PDF 嵌入字体把数字 0-9 编码到了连续的 PUA 字符 (U+F6B1..U+F6BA)。
+    解法: 将这 10 个连续 PUA 字符映射回 '0'..'9'，其他 PUA 直接删除。
+    验证: 成立于  →  "2010" 年。
+    """
+    # 数字 0-9: PUA 偏移 \uf6b1..\uf6ba
+    digit_map = {0xf6b1 + i: str(i) for i in range(10)}
+    out_chars = []
+    for ch in text:
+        cp = ord(ch)
+        if cp in digit_map:
+            out_chars.append(digit_map[cp])
+        elif 0xE000 <= cp <= 0xF8FF:
+            # 其他 PUA 字符（乱码）直接丢弃
+            continue
+        else:
+            out_chars.append(ch)
+    return "".join(out_chars)
+
+
 def _clean_text(text):
-    """清洗 pdfminer 抽出的文本：去多余空白、过滤乱码行。"""
+    """清洗 pdfminer 抽出的文本：修复 PUA 数字乱码、去多余空白、过滤乱码行。"""
+    text = _repair_pua_digits(text)
     lines = []
     for line in text.replace("\r", "\n").split("\n"):
         line = line.strip()
@@ -44,7 +68,12 @@ def _clean_text(text):
 
 
 def load_pdfs(data_dir):
-    """读取 data_dir 下所有 PDF，返回 [(filename, cleaned_text), ...]。"""
+    """读取 data_dir 下所有 PDF，返回 [(filename, cleaned_text), ...]。
+
+    使用 PyMuPDF 而非 pdfminer：pdfminer 遇到字体无 ToUnicode 映射时
+    会把数字直接替换为 U+FFFD 不可逆丢失；PyMuPDF 会保留为 PUA 字符，
+    配合 _repair_pua_digits 可还原成真实数字（如 2010、200kW）。
+    """
     records = []
     if not os.path.isdir(data_dir):
         raise FileNotFoundError(f"数据目录不存在: {data_dir}")
@@ -52,11 +81,14 @@ def load_pdfs(data_dir):
         if not name.lower().endswith(".pdf"):
             continue
         path = os.path.join(data_dir, name)
+        raw = ""
         try:
-            raw = extract_text(path)
+            doc = fitz.open(path)
+            for page in doc:
+                raw += page.get_text()
+            doc.close()
         except Exception as e:
             print(f"  [warn] 抽取失败 {name}: {e}")
-            raw = ""
         cleaned = _clean_text(raw)
         records.append((name, cleaned))
         print(f"  [load] {name}: {len(raw)} -> {len(cleaned)} chars (清洗后)")
