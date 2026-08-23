@@ -3,7 +3,11 @@
 > 企业知识与智能服务助手
 > 基于 RAG（检索增强生成）的企业智能客服系统（助手人格：小知）
 
-**在线 Demo（纯前端版，无需安装）**：https://7b878fb5e3614541be5be7d9ecbf46bb.app.workbuddy.link
+**在线 Demo（长期稳定 · GitHub Pages）**：https://voskamp099.github.io/hydroknow/
+
+> 备用链接（短期沙箱）：https://7b878fb5e3614541be5be7d9ecbf46bb.app.workbuddy.link
+>
+> 更新 Demo：改完内容后运行 `bash publish.sh`（重新构建 + 自动推送，约 1-3 分钟生效）
 
 ## 简介
 
