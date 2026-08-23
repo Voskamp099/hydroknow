@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>氢知 HydroKnow · 沐光氢能企业知识智能服务助手</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="qa-page">
+    <!-- 顶部标题 + 输入区 -->
+    <header class="qa-header">
+      <div class="qa-logo">
+        <span class="qa-logo-icon">H₂</span>
+        <h1>氢知 <span style="color:var(--accent-light);font-size:16px;font-weight:600;margin-left:8px;">HydroKnow</span></h1>
+      </div>
+      <p class="qa-subtitle">我是小知 · 沐光氢能企业知识智能服务助手 · RAG 检索增强 · 离线运行</p>
+
+      <div class="qa-search-box">
+        <input type="text" id="input" placeholder="问点什么吧，比如：沐光氢能的主打产品是什么？" autocomplete="off" autofocus>
+        <button id="sendBtn" onclick="ask()">提问</button>
+      </div>
+
+      <!-- 推荐问题 -->
+      <div class="qa-chips" id="chips"></div>
+
+      <!-- 引擎状态 -->
+      <div class="qa-status" id="status"></div>
+    </header>
+
+    <!-- 答案区 -->
+    <main class="qa-result" id="result">
+      <div class="qa-placeholder" id="placeholder">
+        <div class="placeholder-icon">💬</div>
+        <p>输入问题，小知会从沐光氢能的企业资料中检索答案，并附上原文来源。</p>
+      </div>
+    </main>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

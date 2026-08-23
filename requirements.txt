@@ -1,0 +1,5 @@
+# 企业知识与智能服务助手 · 依赖
+flask>=3.0
+pdfminer.six>=20231228
+scikit-learn>=1.4
+numpy>=1.26
