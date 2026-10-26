@@ -14,7 +14,8 @@
 set -e
 cd "$(dirname "$0")"
 
-PY=/Users/raelynn/.workbuddy/binaries/python/envs/default/bin/python
+# Interpreter to use. Override with PYTHON=/path/to/python3 if needed.
+PY="${PYTHON:-python3}"
 
 echo "== 1/3 重新构建静态版 =="
 $PY build_static.py
