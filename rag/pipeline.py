@@ -8,7 +8,7 @@ RAGEngine 封装: 加载 PDF -> 分块 -> 建索引 -> 检索 -> 生成答案
 import os
 import json
 
-from .loader import load_pdfs, split_into_chunks
+from .loader import load_documents, split_into_chunks
 from .retriever import HybridRetriever, DEFAULT_TOP_K
 from .generator import generate_answer
 
@@ -35,8 +35,8 @@ class RAGEngine:
 
     def load(self):
         """加载 PDF 并构建索引（启动时调用一次）。"""
-        print(f"[RAG] 加载 PDF: {self.data_dir}")
-        records = load_pdfs(self.data_dir)
+        print(f"[RAG] 加载资料: {self.data_dir}")
+        records = load_documents(self.data_dir)
         total_chars = sum(len(t) for _, t in records)
         print(f"[RAG] 共 {len(records)} 个文档, {total_chars} 字符")
 

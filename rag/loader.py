@@ -9,7 +9,11 @@
 
 import os
 import re
-import fitz  # PyMuPDF
+
+try:                       # PDF 支持是可选的
+    import fitz            # PyMuPDF
+except ImportError:        # pragma: no cover - 没有 PyMuPDF 时仍可用文本语料
+    fitz = None
 
 # ── 分块参数 ──────────────────────────────────────────────
 CHUNK_TARGET = 400      # 目标块长度（字符）
@@ -56,6 +60,8 @@ def _clean_text(text):
     lines = []
     for line in text.replace("\r", "\n").split("\n"):
         line = line.strip()
+        # 去掉 Markdown 标题标记，保留标题文字
+        line = re.sub(r"^#{1,6}\s*", "", line)
         if not line:
             continue
         if _is_garbage(line):
@@ -67,32 +73,89 @@ def _clean_text(text):
     return "\n".join(lines)
 
 
-def load_pdfs(data_dir):
-    """读取 data_dir 下所有 PDF，返回 [(filename, cleaned_text), ...]。
+TEXT_SUFFIXES = (".md", ".markdown", ".txt")
 
-    使用 PyMuPDF 而非 pdfminer：pdfminer 遇到字体无 ToUnicode 映射时
-    会把数字直接替换为 U+FFFD 不可逆丢失；PyMuPDF 会保留为 PUA 字符，
-    配合 _repair_pua_digits 可还原成真实数字（如 2010、200kW）。
+
+def _read_pdf(path):
+    """抽取 PDF 文本。缺少 PyMuPDF 时返回空串并提示。"""
+    if fitz is None:
+        print("  [warn] 未安装 PyMuPDF，跳过 PDF: " + os.path.basename(path))
+        return ""
+    raw = ""
+    try:
+        doc = fitz.open(path)
+        for page in doc:
+            raw += page.get_text()
+        doc.close()
+    except Exception as e:
+        print(f"  [warn] 抽取失败 {os.path.basename(path)}: {e}")
+    return raw
+
+
+def _read_markdown(path):
+    """读取 Markdown：把标题并入它下面的正文，避免标题单独成句被当成答案要点。"""
+    with open(path, encoding="utf-8") as fh:
+        lines = fh.read().splitlines()
+    out = []
+    pending = ""
+    for raw in lines:
+        line = raw.strip()
+        if not line:
+            continue
+        heading = re.match(r"^#{1,6}\s*(.+)$", line)
+        if heading:
+            pending = heading.group(1).strip() + "："
+            continue
+        if pending:
+            out.append(pending + line)
+            pending = ""
+        else:
+            out.append(line)
+    if pending:
+        out.append(pending)
+    return "\n".join(out)
+
+
+def load_documents(data_dir):
+    """读取 data_dir 下的文档，返回 [(filename, cleaned_text), ...]。
+
+    支持三类来源：PDF（需要 PyMuPDF）、Markdown 和纯文本。文本文件直接读取，
+    不经过 PDF 抽取的乱码清洗；PDF 抽取使用 PyMuPDF 而非 pdfminer，
+    因为 pdfminer 遇到字体无 ToUnicode 映射时会把数字替换成 U+FFFD 不可逆丢失。
     """
     records = []
     if not os.path.isdir(data_dir):
         raise FileNotFoundError(f"数据目录不存在: {data_dir}")
     for name in sorted(os.listdir(data_dir)):
-        if not name.lower().endswith(".pdf"):
-            continue
         path = os.path.join(data_dir, name)
-        raw = ""
-        try:
-            doc = fitz.open(path)
-            for page in doc:
-                raw += page.get_text()
-            doc.close()
-        except Exception as e:
-            print(f"  [warn] 抽取失败 {name}: {e}")
+        if not os.path.isfile(path):
+            continue
+        lower = name.lower()
+        if lower.endswith(".pdf"):
+            raw = _read_pdf(path)
+        elif lower.endswith((".md", ".markdown")):
+            try:
+                raw = _read_markdown(path)
+            except Exception as e:
+                print(f"  [warn] 读取失败 {name}: {e}")
+                continue
+        elif lower.endswith(".txt"):
+            try:
+                with open(path, encoding="utf-8") as fh:
+                    raw = fh.read()
+            except Exception as e:
+                print(f"  [warn] 读取失败 {name}: {e}")
+                continue
+        else:
+            continue
         cleaned = _clean_text(raw)
         records.append((name, cleaned))
         print(f"  [load] {name}: {len(raw)} -> {len(cleaned)} chars (清洗后)")
     return records
+
+
+# 旧名保留为别名，避免外部调用方失效
+load_pdfs = load_documents
 
 
 def split_into_chunks(records):

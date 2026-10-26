@@ -1,108 +1,68 @@
-# HydroKnow · 氢知 — enterprise knowledge assistant for hydrogen energy
-
-An enterprise question-answering service built on the company's own public material.
-The corpus is three PDFs — a company profile sheet, a product one-pager and the 2025
-brochure — and the answers are retrieved from those documents, with the source and a
-confidence score attached.
-
-Built for the Enterprise knowledge and service assistant.
-
-Online demo (stable, GitHub Pages): https://voskamp099.github.io/hydroknow/
+# HydroKnow · Enterprise knowledge assistant
 
 [English](README.en.md) · [简体中文](README.md)
 
-## What it does
+> A local RAG assistant for your own documents (assistant persona: 小知)
 
-- **Knowledge base** — loads the enterprise PDFs, cleans the extracted text and splits it
-  into chunks.
-- **Hybrid retrieval** — BM25 for exact keyword matches plus TF-IDF char n-grams for
-  fuzzy wording, fused with a weighted score. Character-level features mean Chinese text
-  works without a tokenizer.
-- **Structured answers** — a key-point list, the source documents with their match scores,
-  and a confidence value, instead of one long paragraph.
-- **Web chat** — a small Flask chat interface that shows the sources behind each answer.
-- **CLI batch mode** — runs a set of prepared questions, prints the answers and writes a
-  static `demo.html` plus a machine-readable `cli_results.json`.
-- **Pluggable LLM** — the generator is an offline stub by default; swapping in a real
-  model is a one-function change.
+**Live demo (GitHub Pages)**: https://voskamp099.github.io/hydroknow/
 
-## Quick start
+## What it is
+
+A knowledge assistant that runs entirely offline. It loads the documents in `data/`, extracts and cleans the text, splits it into semantic chunks, retrieves the most relevant passages with a hybrid BM25 + TF-IDF search, and assembles an answer with its sources and a confidence score.
+
+The corpus shipped in `data/` is a **fictional sample** — a made-up hydrogen company — so the whole retrieval and answer path can be demonstrated without shipping anyone else's material. To use it on your own documents, drop your own PDFs, Markdown or plain-text files into `data/` and re-run.
+
+This repository contains no third-party material. The sample corpus, the sample questions and the retrieval results are all generated from self-written content.
+
+## Features
+
+- **Corpus loading**: PDF, Markdown and plain text; text cleaning and semantic chunking
+- **Hybrid retrieval**: BM25 + TF-IDF fused with a weight, no Chinese word segmenter needed
+- **Answering**: key sentences extracted from the retrieved passages, with sources and confidence
+- **Web chat**: live Q&A with the retrieved sources and match scores
+- **CLI demo**: runs a batch of preset questions and writes a static demo.html
+- **Pluggable LLM**: the default generator is an offline stub; replace one function to call a real model
+
+## Layout
+
+```
+.
+├── app.py                 # Flask web app
+├── build_static.py        # builds the self-contained static demo into dist/index.html
+├── data/                  # corpus directory: PDF / Markdown / plain text
+├── dist/index.html        # self-contained static demo
+├── run.py                 # CLI entry point
+├── run_cli.py             # CLI batch mode, writes demo.html
+├── rag/                   # the RAG engine
+│   ├── loader.py          # document loading, cleaning, chunking
+│   ├── retriever.py       # hybrid BM25 + TF-IDF retrieval
+│   ├── generator.py       # answer generation (pluggable)
+│   └── pipeline.py        # RAGEngine wiring
+├── templates/index.html   # chat UI
+└── static/                # front-end assets
+```
+
+## Run
 
 ```bash
+python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
+
+python app.py            # web UI at http://127.0.0.1:5000
+python run_cli.py        # CLI batch run, writes demo.html
+python build_static.py   # self-contained static demo in dist/index.html
 ```
 
-Web mode:
+PyMuPDF is only needed for PDF corpora; Markdown and plain text work without it.
 
-```bash
-python app.py     # then open http://127.0.0.1:5000
-```
+## Use it with your own documents
 
-CLI mode:
+1. Put your files in `data/` (`.pdf`, `.md` or `.txt`).
+2. Update the preset questions in `run_cli.py` and `app.py`.
+3. Re-run `python run_cli.py` and `python build_static.py`, then `bash publish.sh`.
 
-```bash
-python run.py                                        # run the prepared questions
-python run.py --question "When was the company founded?"
-```
+## Design notes
 
-## API
-
-| Method | Path | Purpose |
-| --- | --- | --- |
-| GET | `/` | chat interface |
-| POST | `/api/ask` | ask a question, body `{"question": "..."}` |
-| GET | `/api/stats` | corpus statistics (documents, chunks) |
-| GET | `/api/suggest` | suggested questions |
-
-## How retrieval works
-
-```
-question
-   │
-   ▼
-PDF load ──▶ chunking ──▶ hybrid retrieval ──▶ answer generation
- (pdfminer)  (~400 chars)  (BM25 + TF-IDF)    (pluggable LLM)
-                                          │
-                                          ▼
-                              answer + key points + sources + confidence
-```
-
-- **BM25** — exact keyword matching over character bigrams, so Chinese needs no tokenizer.
-- **TF-IDF** — character n-grams (1, 2) with cosine similarity, covering phrasings that
-  do not match literally.
-- **Fusion** — `score = 0.6 × normalised BM25 + 0.4 × normalised TF-IDF`.
-
-## Plugging in a real model
-
-The generator is an offline stub: it extracts and structures the relevant sentences from
-the retrieved chunks without calling any API. To use a real model, change one function in
-`rag/generator.py`:
-
-```python
-def generate_answer(question, retrieved_chunks):
-    context = "\n\n".join(c["text"] for c, _ in retrieved_chunks)
-    prompt = f"Answer the question using only the context.\nContext:\n{context}\n\nQuestion: {question}\nAnswer:"
-    answer_text = your_llm_client.chat(prompt)   # replace with your model call
-    return {"answer": answer_text, "key_points": [...], "sources": [...], "confidence": ...}
-```
-
-The signature stays the same, so the web and CLI paths need no changes.
-
-## Data
-
-- Source: three publicly released PDFs from the company (company profile, product
-  one-pager, 2025 brochure).
-- The one-pager is an image-based design file, so text extraction from it returns noise;
-  that content is filtered out automatically. The usable material comes from the profile
-  sheet and the brochure.
-
-## Known limits
-
-1. **The generator is a stub** — no model call yet, so answers are structured extractions
-   rather than composed answers.
-2. **Thin corpus** — three documents. A real deployment would add FAQs, product manuals
-   and technical documentation.
-3. **Lexical retrieval** — BM25 and TF-IDF match words, not meaning. Embedding models
-   would improve it.
-4. **No persistence** — the PDFs are reloaded and re-indexed on every start (about two to
-   three seconds).
+- **Why hybrid retrieval**: BM25 handles rare terms and proper nouns, TF-IDF captures the overall term distribution. With Chinese text a character n-gram approximation works without a segmenter, and fusing the two is steadier than either alone.
+- **Why no LLM by default**: the offline stub keeps the project runnable and reproducible anywhere; to call a real model, replace `generate_answer()` in `rag/generator.py` and keep the signature `generate_answer(question, retrieved_chunks) -> str`.
+- **Why PyMuPDF for PDFs**: pdfminer replaces digits with U+FFFD when a font has no ToUnicode mapping, which loses the characters irreversibly. PyMuPDF keeps them in the private use area, where `_repair_pua_digits` can restore them.
