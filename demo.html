@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>企业知识与智能服务助手 · Demo</title>
+<style>
+  :root { --bg:#0f1117; --card:#252836; --border:#2d3142; --ink:#e4e6ef;
+          --muted:#8b90a0; --accent:#0a6e4f; --accent-light:#0d9070; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--ink);
+         font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+         line-height:1.6; font-size:14px; }
+  header { background:var(--accent); padding:28px 24px; }
+  header h1 { font-size:20px; color:#fff; }
+  header p { font-size:13px; color:rgba(255,255,255,0.85); margin-top:4px; }
+  main { max-width:800px; margin:24px auto; padding:0 16px 48px; }
+  .qa-card { background:var(--card); border:1px solid var(--border);
+              border-radius:12px; padding:18px 20px; margin-bottom:20px; }
+  .qa-q { font-weight:700; font-size:16px; margin-bottom:12px; }
+  .qa-a { white-space:pre-wrap; background:rgba(255,255,255,0.03);
+          border-radius:8px; padding:12px 14px; }
+  .qa-confidence { display:inline-block; font-size:11px; color:var(--muted);
+                   margin-top:8px; padding:2px 8px; background:rgba(255,255,255,0.05);
+                   border-radius:4px; }
+  .qa-sources-title { margin:16px 0 8px; font-size:12px; color:var(--muted);
+                       font-weight:600; }
+  .source-card { border-left:3px solid var(--accent); background:rgba(255,255,255,0.03);
+                  border-radius:6px; padding:10px 12px; margin-bottom:10px; }
+  .source-meta { display:flex; justify-content:space-between; font-size:11px;
+                  color:var(--muted); margin-bottom:6px; }
+  .source-score { color:var(--accent-light); font-weight:600; }
+  .source-text { font-size:12px; white-space:pre-wrap; max-height:120px; overflow-y:auto; }
+  footer { text-align:center; color:var(--muted); font-size:12px; padding:18px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>氢知 · 企业知识与智能服务助手（沐光氢能）</h1>
+  <p>RAG Demo · BM25 + TF-IDF 混合检索 · 生成于 2026-10-26 18:21</p>
+</header>
+<main>
+<div class="qa-card"><div class="qa-q">1. 沐光氢能成立于哪一年？</div><div class="qa-a">根据知识库资料，关于「沐光氢能成立于哪一年？」：<br>• 基本信息：沐光氢能科技（北京）有限公司成立于 2014 年，总部位于北京市大兴区国际氢能产业创新示范区 A 座<br>• 核心定位：沐光氢能面向园区、工商业和交通场景提供&quot;发电 + 储氢 + 能源管理&quot;的一体化方案<br>• 园区微电网方案：面向产业园区，沐光氢能提供&quot;光氢储微电网&quot;方案</div><div class="qa-confidence">置信度 1.0</div><div class="qa-sources-title">检索来源</div><div class="source-card"><div class="source-meta"><span>来源 1 · 00_公司资料说明.md</span><span class="source-score">100.0%</span></div><div class="source-text">基本信息：沐光氢能科技（北京）有限公司成立于 2014 年，总部位于北京市大兴区国际氢能产业创新示范区 A 座。公司专注氢燃料电池的研发、制造与系统集成，是国内较早实现百瓦级质子交换膜燃料电池发电模块量产的团队之一。
+公司现有员工 260 余人，其中研发人员占比约 42%，在河北涿州设有 18 兆瓦级电堆产线，在浙江绍兴设有系统集成工厂。
+核心定位：沐光氢能面向园区、工商业和交通场景提供&quot;发电 + 储氢 + 能源管理&quot;的一体化方案。公司的产品线分为三块：百瓦级燃料电池发电模块、氢储能槽车与加氢撬、面向叉车和冷链车辆的燃料电池动力总成。</div></div>
+<div class="source-card"><div class="source-meta"><span>来源 2 · 02_解决方案手册.md</span><span class="source-score">53.4%</span></div><div class="source-text">园区微电网方案：面向产业园区，沐光氢能提供&quot;光氢储微电网&quot;方案。该方案由分布式光伏、氢储能系统、燃料电池发电模块和能源管理平台组成，可在电网检修期间维持园区关键负荷 72 小时以上。已落地的两个园区分别位于河北廊坊和山东淄博，单个站点配置 2 兆瓦发电能力。
+冷链与物流方案：针对冷链物流，公司的燃料电池冷链动力包可替代传统柴油机组。运营数据显示，同等工况下综合能耗下降约 27%，且没有尾气排放。合作方包括京华冷链物流和北方综合物流园，两家公司在 2025 年合计投放 120 台冷链车。
+备用电源方案：面向医院、数据中心和通信基站，公司的模块化备用电源方案可在断电后 10 秒内接管关键负荷。方案...</div></div>
+<div class="source-card"><div class="source-meta"><span>来源 3 · 00_公司资料说明.md</span><span class="source-score">36.8%</span></div><div class="source-text">官网与联系：公司官方网站为 www.muguang-h2.example，统一咨询邮箱为 hello@muguang-h2.example。投资者关系邮箱为 ir@muguang-h2.example。总部地址为北京市大兴区国际氢能产业创新示范区 A 座 7 层。
+发展沿革：2014 年公司在中关村科技园成立，以膜电极制备工艺起步。2018 年建成第一条百瓦级发电模块中试线。2021 年获得国家高新技术企业认定，并建成兆瓦级电堆产线。2024 年公司发布第五代燃料电池发电模块，系统效率提升至 60% 以上，模块寿命突破 2 万小时。</div></div>
+<div class="source-card"><div class="source-meta"><span>来源 4 · 01_燃料电池产品单页.md</span><span class="source-score">29.3%</span></div><div class="source-text">产品概述：第五代燃料电池发电模块采用 180 kW 额定功率设计，峰值效率 60.5%，可在零下 30 摄氏度到 55 摄氏度区间稳定运行。模块重量 480 公斤，防护等级 IP67，支持并联组堆。
+关键技术指标：额定功率 180 kW，峰值效率 60.5%，输出电压 400 伏直流，寿命 2 万小时以上，启动时间 8 秒。模块采用空气冷却与水冷双通道设计，可在无外加水质条件下维持稳定输出。
+电堆由 320 片膜电极组成，铂载量降至 0.28 克每千瓦，较上一代下降约 18%。催化剂采用梯度涂布工艺，低电流密度区域铂载量进一步压缩。
+产品系列与应用：模块支持 30 千瓦至 180 千瓦多个规格...</div></div>
+</div>
+<div class="qa-card"><div class="qa-q">2. 沐光氢能的主打产品是什么？</div><div class="qa-a">根据知识库资料，关于「沐光氢能的主打产品是什么？」：<br>• 基本信息：沐光氢能科技（北京）有限公司成立于 2014 年，总部位于北京市大兴区国际氢能产业创新示范区 A 座<br>• 核心定位：沐光氢能面向园区、工商业和交通场景提供&quot;发电 + 储氢 + 能源管理&quot;的一体化方案<br>• 公司的产品线分为三块：百瓦级燃料电池发电模块、氢储能槽车与加氢撬、面向叉车和冷链车辆的燃料电池动力总成</div><div class="qa-confidence">置信度 1.0</div><div class="qa-sources-title">检索来源</div><div class="source-card"><div class="source-meta"><span>来源 1 · 00_公司资料说明.md</span><span class="source-score">100.0%</span></div><div class="source-text">基本信息：沐光氢能科技（北京）有限公司成立于 2014 年，总部位于北京市大兴区国际氢能产业创新示范区 A 座。公司专注氢燃料电池的研发、制造与系统集成，是国内较早实现百瓦级质子交换膜燃料电池发电模块量产的团队之一。
+公司现有员工 260 余人，其中研发人员占比约 42%，在河北涿州设有 18 兆瓦级电堆产线，在浙江绍兴设有系统集成工厂。
+核心定位：沐光氢能面向园区、工商业和交通场景提供&quot;发电 + 储氢 + 能源管理&quot;的一体化方案。公司的产品线分为三块：百瓦级燃料电池发电模块、氢储能槽车与加氢撬、面向叉车和冷链车辆的燃料电池动力总成。</div></div>
+<div class="source-card"><div class="source-meta"><span>来源 2 · 02_解决方案手册.md</span><span class="source-score">63.5%</span></div><div class="source-text">园区微电网方案：面向产业园区，沐光氢能提供&quot;光氢储微电网&quot;方案。该方案由分布式光伏、氢储能系统、燃料电池发电模块和能源管理平台组成，可在电网检修期间维持园区关键负荷 72 小时以上。已落地的两个园区分别位于河北廊坊和山东淄博，单个站点配置 2 兆瓦发电能力。
+冷链与物流方案：针对冷链物流，公司的燃料电池冷链动力包可替代传统柴油机组。运营数据显示，同等工况下综合能耗下降约 27%，且没有尾气排放。合作方包括京华冷链物流和北方综合物流园，两家公司在 2025 年合计投放 120 台冷链车。
+备用电源方案：面向医院、数据中心和通信基站，公司的模块化备用电源方案可在断电后 10 秒内接管关键负荷。方案...</div></div>
+<div class="source-card"><div class="source-meta"><span>来源 3 · 01_燃料电池产品单页.md</span><span class="source-score">48.8%</span></div><div class="source-text">产品概述：第五代燃料电池发电模块采用 180 kW 额定功率设计，峰值效率 60.5%，可在零下 30 摄氏度到 55 摄氏度区间稳定运行。模块重量 480 公斤，防护等级 IP67，支持并联组堆。
+关键技术指标：额定功率 180 kW，峰值效率 60.5%，输出电压 400 伏直流，寿命 2 万小时以上，启动时间 8 秒。模块采用空气冷却与水冷双通道设计，可在无外加水质条件下维持稳定输出。
+电堆由 320 片膜电极组成，铂载量降至 0.28 克每千瓦，较上一代下降约 18%。催化剂采用梯度涂布工艺，低电流密度区域铂载量进一步压缩。
+产品系列与应用：模块支持 30 千瓦至 180 千瓦多个规格...</div></div>
+<div class="source-card"><div class="source-meta"><span>来源 4 · 00_公司资料说明.md</span><span class="source-score">24.0%</span></div><div class="source-text">官网与联系：公司官方网站为 www.muguang-h2.example，统一咨询邮箱为 hello@muguang-h2.example。投资者关系邮箱为 ir@muguang-h2.example。总部地址为北京市大兴区国际氢能产业创新示范区 A 座 7 层。
+发展沿革：2014 年公司在中关村科技园成立，以膜电极制备工艺起步。2018 年建成第一条百瓦级发电模块中试线。2021 年获得国家高新技术企业认定，并建成兆瓦级电堆产线。2024 年公司发布第五代燃料电池发电模块，系统效率提升至 60% 以上，模块寿命突破 2 万小时。</div></div>
+</div>
+<div class="qa-card"><div class="qa-q">3. 沐光氢能的核心技术能力有哪些？</div><div class="qa-a">根据知识库资料，关于「沐光氢能的核心技术能力有哪些？」：<br>• 核心定位：沐光氢能面向园区、工商业和交通场景提供&quot;发电 + 储氢 + 能源管理&quot;的一体化方案<br>• 基本信息：沐光氢能科技（北京）有限公司成立于 2014 年，总部位于北京市大兴区国际氢能产业创新示范区 A 座<br>• 公司的产品线分为三块：百瓦级燃料电池发电模块、氢储能槽车与加氢撬、面向叉车和冷链车辆的燃料电池动力总成</div><div class="qa-confidence">置信度 1.0</div><div class="qa-sources-title">检索来源</div><div class="source-card"><div class="source-meta"><span>来源 1 · 00_公司资料说明.md</span><span class="source-score">100.0%</span></div><div class="source-text">基本信息：沐光氢能科技（北京）有限公司成立于 2014 年，总部位于北京市大兴区国际氢能产业创新示范区 A 座。公司专注氢燃料电池的研发、制造与系统集成，是国内较早实现百瓦级质子交换膜燃料电池发电模块量产的团队之一。
+公司现有员工 260 余人，其中研发人员占比约 42%，在河北涿州设有 18 兆瓦级电堆产线，在浙江绍兴设有系统集成工厂。
+核心定位：沐光氢能面向园区、工商业和交通场景提供&quot;发电 + 储氢 + 能源管理&quot;的一体化方案。公司的产品线分为三块：百瓦级燃料电池发电模块、氢储能槽车与加氢撬、面向叉车和冷链车辆的燃料电池动力总成。</div></div>
+<div class="source-card"><div class="source-meta"><span>来源 2 · 02_解决方案手册.md</span><span class="source-score">78.9%</span></div><div class="source-text">园区微电网方案：面向产业园区，沐光氢能提供&quot;光氢储微电网&quot;方案。该方案由分布式光伏、氢储能系统、燃料电池发电模块和能源管理平台组成，可在电网检修期间维持园区关键负荷 72 小时以上。已落地的两个园区分别位于河北廊坊和山东淄博，单个站点配置 2 兆瓦发电能力。
+冷链与物流方案：针对冷链物流，公司的燃料电池冷链动力包可替代传统柴油机组。运营数据显示，同等工况下综合能耗下降约 27%，且没有尾气排放。合作方包括京华冷链物流和北方综合物流园，两家公司在 2025 年合计投放 120 台冷链车。
+备用电源方案：面向医院、数据中心和通信基站，公司的模块化备用电源方案可在断电后 10 秒内接管关键负荷。方案...</div></div>
+<div class="source-card"><div class="source-meta"><span>来源 3 · 01_燃料电池产品单页.md</span><span class="source-score">38.2%</span></div><div class="source-text">产品概述：第五代燃料电池发电模块采用 180 kW 额定功率设计，峰值效率 60.5%，可在零下 30 摄氏度到 55 摄氏度区间稳定运行。模块重量 480 公斤，防护等级 IP67，支持并联组堆。
+关键技术指标：额定功率 180 kW，峰值效率 60.5%，输出电压 400 伏直流，寿命 2 万小时以上，启动时间 8 秒。模块采用空气冷却与水冷双通道设计，可在无外加水质条件下维持稳定输出。
+电堆由 320 片膜电极组成，铂载量降至 0.28 克每千瓦，较上一代下降约 18%。催化剂采用梯度涂布工艺，低电流密度区域铂载量进一步压缩。
+产品系列与应用：模块支持 30 千瓦至 180 千瓦多个规格...</div></div>
+<div class="source-card"><div class="source-meta"><span>来源 4 · 00_公司资料说明.md</span><span class="source-score">35.8%</span></div><div class="source-text">官网与联系：公司官方网站为 www.muguang-h2.example，统一咨询邮箱为 hello@muguang-h2.example。投资者关系邮箱为 ir@muguang-h2.example。总部地址为北京市大兴区国际氢能产业创新示范区 A 座 7 层。
+发展沿革：2014 年公司在中关村科技园成立，以膜电极制备工艺起步。2018 年建成第一条百瓦级发电模块中试线。2021 年获得国家高新技术企业认定，并建成兆瓦级电堆产线。2024 年公司发布第五代燃料电池发电模块，系统效率提升至 60% 以上，模块寿命突破 2 万小时。</div></div>
+</div>
+<div class="qa-card"><div class="qa-q">4. 沐光氢能的合作方和客户有哪些？</div><div class="qa-a">根据知识库资料，关于「沐光氢能的合作方和客户有哪些？」：<br>• 合作方与生态：公司当前的合作伙伴包括北方氢能供应链公司、京华公交集团、京城轨道交通研究院和两家省级能源集团<br>• 核心定位：沐光氢能面向园区、工商业和交通场景提供&quot;发电 + 储氢 + 能源管理&quot;的一体化方案<br>• 园区微电网方案：面向产业园区，沐光氢能提供&quot;光氢储微电网&quot;方案</div><div class="qa-confidence">置信度 0.9552</div><div class="qa-sources-title">检索来源</div><div class="source-card"><div class="source-meta"><span>来源 1 · 02_解决方案手册.md</span><span class="source-score">95.5%</span></div><div class="source-text">合作方与生态：公司当前的合作伙伴包括北方氢能供应链公司、京华公交集团、京城轨道交通研究院和两家省级能源集团。联合实验室方面，公司与京城轨道交通研究院共建氢能交通联合实验室，与北方综合物流园共建冷链能源联合实验室。
+服务与支持：公司在全国设有 6 个区域服务中心，覆盖京津冀、长三角和珠三角。模块出厂质保 5 年，远程监控平台提供运行状态诊断，标准服务响应时间为 4 小时到场。</div></div>
+<div class="source-card"><div class="source-meta"><span>来源 2 · 02_解决方案手册.md</span><span class="source-score">92.3%</span></div><div class="source-text">园区微电网方案：面向产业园区，沐光氢能提供&quot;光氢储微电网&quot;方案。该方案由分布式光伏、氢储能系统、燃料电池发电模块和能源管理平台组成，可在电网检修期间维持园区关键负荷 72 小时以上。已落地的两个园区分别位于河北廊坊和山东淄博，单个站点配置 2 兆瓦发电能力。
+冷链与物流方案：针对冷链物流，公司的燃料电池冷链动力包可替代传统柴油机组。运营数据显示，同等工况下综合能耗下降约 27%，且没有尾气排放。合作方包括京华冷链物流和北方综合物流园，两家公司在 2025 年合计投放 120 台冷链车。
+备用电源方案：面向医院、数据中心和通信基站，公司的模块化备用电源方案可在断电后 10 秒内接管关键负荷。方案...</div></div>
+<div class="source-card"><div class="source-meta"><span>来源 3 · 00_公司资料说明.md</span><span class="source-score">79.8%</span></div><div class="source-text">基本信息：沐光氢能科技（北京）有限公司成立于 2014 年，总部位于北京市大兴区国际氢能产业创新示范区 A 座。公司专注氢燃料电池的研发、制造与系统集成，是国内较早实现百瓦级质子交换膜燃料电池发电模块量产的团队之一。
+公司现有员工 260 余人，其中研发人员占比约 42%，在河北涿州设有 18 兆瓦级电堆产线，在浙江绍兴设有系统集成工厂。
+核心定位：沐光氢能面向园区、工商业和交通场景提供&quot;发电 + 储氢 + 能源管理&quot;的一体化方案。公司的产品线分为三块：百瓦级燃料电池发电模块、氢储能槽车与加氢撬、面向叉车和冷链车辆的燃料电池动力总成。</div></div>
+<div class="source-card"><div class="source-meta"><span>来源 4 · 01_燃料电池产品单页.md</span><span class="source-score">30.2%</span></div><div class="source-text">产品概述：第五代燃料电池发电模块采用 180 kW 额定功率设计，峰值效率 60.5%，可在零下 30 摄氏度到 55 摄氏度区间稳定运行。模块重量 480 公斤，防护等级 IP67，支持并联组堆。
+关键技术指标：额定功率 180 kW，峰值效率 60.5%，输出电压 400 伏直流，寿命 2 万小时以上，启动时间 8 秒。模块采用空气冷却与水冷双通道设计，可在无外加水质条件下维持稳定输出。
+电堆由 320 片膜电极组成，铂载量降至 0.28 克每千瓦，较上一代下降约 18%。催化剂采用梯度涂布工艺，低电流密度区域铂载量进一步压缩。
+产品系列与应用：模块支持 30 千瓦至 180 千瓦多个规格...</div></div>
+</div>
+<div class="qa-card"><div class="qa-q">5. 沐光氢能的官网和联系方式是什么？</div><div class="qa-a">根据知识库资料，关于「沐光氢能的官网和联系方式是什么？」：<br>• 该方案由分布式光伏、氢储能系统、燃料电池发电模块和能源管理平台组成，可在电网检修期间维持园区关键负荷 72 小时以上<br>• 核心定位：沐光氢能面向园区、工商业和交通场景提供&quot;发电 + 储氢 + 能源管理&quot;的一体化方案<br>• 园区微电网方案：面向产业园区，沐光氢能提供&quot;光氢储微电网&quot;方案</div><div class="qa-confidence">置信度 0.9766</div><div class="qa-sources-title">检索来源</div><div class="source-card"><div class="source-meta"><span>来源 1 · 00_公司资料说明.md</span><span class="source-score">97.7%</span></div><div class="source-text">基本信息：沐光氢能科技（北京）有限公司成立于 2014 年，总部位于北京市大兴区国际氢能产业创新示范区 A 座。公司专注氢燃料电池的研发、制造与系统集成，是国内较早实现百瓦级质子交换膜燃料电池发电模块量产的团队之一。
+公司现有员工 260 余人，其中研发人员占比约 42%，在河北涿州设有 18 兆瓦级电堆产线，在浙江绍兴设有系统集成工厂。
+核心定位：沐光氢能面向园区、工商业和交通场景提供&quot;发电 + 储氢 + 能源管理&quot;的一体化方案。公司的产品线分为三块：百瓦级燃料电池发电模块、氢储能槽车与加氢撬、面向叉车和冷链车辆的燃料电池动力总成。</div></div>
+<div class="source-card"><div class="source-meta"><span>来源 2 · 00_公司资料说明.md</span><span class="source-score">87.3%</span></div><div class="source-text">官网与联系：公司官方网站为 www.muguang-h2.example，统一咨询邮箱为 hello@muguang-h2.example。投资者关系邮箱为 ir@muguang-h2.example。总部地址为北京市大兴区国际氢能产业创新示范区 A 座 7 层。
+发展沿革：2014 年公司在中关村科技园成立，以膜电极制备工艺起步。2018 年建成第一条百瓦级发电模块中试线。2021 年获得国家高新技术企业认定，并建成兆瓦级电堆产线。2024 年公司发布第五代燃料电池发电模块，系统效率提升至 60% 以上，模块寿命突破 2 万小时。</div></div>
+<div class="source-card"><div class="source-meta"><span>来源 3 · 02_解决方案手册.md</span><span class="source-score">81.4%</span></div><div class="source-text">园区微电网方案：面向产业园区，沐光氢能提供&quot;光氢储微电网&quot;方案。该方案由分布式光伏、氢储能系统、燃料电池发电模块和能源管理平台组成，可在电网检修期间维持园区关键负荷 72 小时以上。已落地的两个园区分别位于河北廊坊和山东淄博，单个站点配置 2 兆瓦发电能力。
+冷链与物流方案：针对冷链物流，公司的燃料电池冷链动力包可替代传统柴油机组。运营数据显示，同等工况下综合能耗下降约 27%，且没有尾气排放。合作方包括京华冷链物流和北方综合物流园，两家公司在 2025 年合计投放 120 台冷链车。
+备用电源方案：面向医院、数据中心和通信基站，公司的模块化备用电源方案可在断电后 10 秒内接管关键负荷。方案...</div></div>
+<div class="source-card"><div class="source-meta"><span>来源 4 · 01_燃料电池产品单页.md</span><span class="source-score">32.1%</span></div><div class="source-text">产品概述：第五代燃料电池发电模块采用 180 kW 额定功率设计，峰值效率 60.5%，可在零下 30 摄氏度到 55 摄氏度区间稳定运行。模块重量 480 公斤，防护等级 IP67，支持并联组堆。
+关键技术指标：额定功率 180 kW，峰值效率 60.5%，输出电压 400 伏直流，寿命 2 万小时以上，启动时间 8 秒。模块采用空气冷却与水冷双通道设计，可在无外加水质条件下维持稳定输出。
+电堆由 320 片膜电极组成，铂载量降至 0.28 克每千瓦，较上一代下降约 18%。催化剂采用梯度涂布工艺，低电流密度区域铂载量进一步压缩。
+产品系列与应用：模块支持 30 千瓦至 180 千瓦多个规格...</div></div>
+</div>
+<div class="qa-card"><div class="qa-q">6. 沐光氢能的应用场景有哪些？</div><div class="qa-a">根据知识库资料，关于「沐光氢能的应用场景有哪些？」：<br>• 核心定位：沐光氢能面向园区、工商业和交通场景提供&quot;发电 + 储氢 + 能源管理&quot;的一体化方案<br>• 基本信息：沐光氢能科技（北京）有限公司成立于 2014 年，总部位于北京市大兴区国际氢能产业创新示范区 A 座<br>• 产品系列与应用：模块支持 30 千瓦至 180 千瓦多个规格，可用于备用电源、微电网主供和热电联供三个场景</div><div class="qa-confidence">置信度 1.0</div><div class="qa-sources-title">检索来源</div><div class="source-card"><div class="source-meta"><span>来源 1 · 00_公司资料说明.md</span><span class="source-score">100.0%</span></div><div class="source-text">基本信息：沐光氢能科技（北京）有限公司成立于 2014 年，总部位于北京市大兴区国际氢能产业创新示范区 A 座。公司专注氢燃料电池的研发、制造与系统集成，是国内较早实现百瓦级质子交换膜燃料电池发电模块量产的团队之一。
+公司现有员工 260 余人，其中研发人员占比约 42%，在河北涿州设有 18 兆瓦级电堆产线，在浙江绍兴设有系统集成工厂。
+核心定位：沐光氢能面向园区、工商业和交通场景提供&quot;发电 + 储氢 + 能源管理&quot;的一体化方案。公司的产品线分为三块：百瓦级燃料电池发电模块、氢储能槽车与加氢撬、面向叉车和冷链车辆的燃料电池动力总成。</div></div>
+<div class="source-card"><div class="source-meta"><span>来源 2 · 01_燃料电池产品单页.md</span><span class="source-score">69.9%</span></div><div class="source-text">产品概述：第五代燃料电池发电模块采用 180 kW 额定功率设计，峰值效率 60.5%，可在零下 30 摄氏度到 55 摄氏度区间稳定运行。模块重量 480 公斤，防护等级 IP67，支持并联组堆。
+关键技术指标：额定功率 180 kW，峰值效率 60.5%，输出电压 400 伏直流，寿命 2 万小时以上，启动时间 8 秒。模块采用空气冷却与水冷双通道设计，可在无外加水质条件下维持稳定输出。
+电堆由 320 片膜电极组成，铂载量降至 0.28 克每千瓦，较上一代下降约 18%。催化剂采用梯度涂布工艺，低电流密度区域铂载量进一步压缩。
+产品系列与应用：模块支持 30 千瓦至 180 千瓦多个规格...</div></div>
+<div class="source-card"><div class="source-meta"><span>来源 3 · 02_解决方案手册.md</span><span class="source-score">65.2%</span></div><div class="source-text">园区微电网方案：面向产业园区，沐光氢能提供&quot;光氢储微电网&quot;方案。该方案由分布式光伏、氢储能系统、燃料电池发电模块和能源管理平台组成，可在电网检修期间维持园区关键负荷 72 小时以上。已落地的两个园区分别位于河北廊坊和山东淄博，单个站点配置 2 兆瓦发电能力。
+冷链与物流方案：针对冷链物流，公司的燃料电池冷链动力包可替代传统柴油机组。运营数据显示，同等工况下综合能耗下降约 27%，且没有尾气排放。合作方包括京华冷链物流和北方综合物流园，两家公司在 2025 年合计投放 120 台冷链车。
+备用电源方案：面向医院、数据中心和通信基站，公司的模块化备用电源方案可在断电后 10 秒内接管关键负荷。方案...</div></div>
+<div class="source-card"><div class="source-meta"><span>来源 4 · 02_解决方案手册.md</span><span class="source-score">27.4%</span></div><div class="source-text">合作方与生态：公司当前的合作伙伴包括北方氢能供应链公司、京华公交集团、京城轨道交通研究院和两家省级能源集团。联合实验室方面，公司与京城轨道交通研究院共建氢能交通联合实验室，与北方综合物流园共建冷链能源联合实验室。
+服务与支持：公司在全国设有 6 个区域服务中心，覆盖京津冀、长三角和珠三角。模块出厂质保 5 年，远程监控平台提供运行状态诊断，标准服务响应时间为 4 小时到场。</div></div>
+</div>
+
+</main>
+<footer>答案生成为离线 stub（未调用 LLM）。接入真实模型后效果更佳。</footer>
+</body>
+</html>
