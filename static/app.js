@@ -1,4 +1,4 @@
-/* 沐光氢能知识助手 · 问答页面逻辑 */
+/* 氢知知识助手 · 问答页面逻辑 */
 
 const input = document.getElementById('input');
 const sendBtn = document.getElementById('sendBtn');

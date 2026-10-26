@@ -73,7 +73,7 @@ def generate_answer(question, retrieved_chunks):
 
     # 组装答案文本
     if key_sents:
-        answer_parts = [f"根据沐光氢能公开资料，关于「{question}」："]
+        answer_parts = [f"根据知识库资料，关于「{question}」："]
         for sent, _, _ in key_sents:
             answer_parts.append(f"• {sent}")
         answer_text = "\n".join(answer_parts)

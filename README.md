@@ -1,9 +1,8 @@
-# 氢知 HydroKnow · 沐光氢能企业知识智能服务助手
+# 氢知 HydroKnow · 企业知识与智能服务助手
 
 [English](README.en.md) · [简体中文](README.md)
 
-> 企业知识与智能服务助手
-> 基于 RAG（检索增强生成）的企业智能客服系统（助手人格：小知）
+> 基于 RAG（检索增强生成）的本地知识问答助手（助手人格：小知）
 
 **在线 Demo（长期稳定 · GitHub Pages）**：https://voskamp099.github.io/hydroknow/
 
@@ -11,11 +10,15 @@
 
 ## 简介
 
-为北京沐光氢能科技有限公司构建的智能 AI 客服助手「小知」，解决"市场销售、品牌营销人员不足"的企业痛点。系统基于公司公开资料（宣传册、产品单页），通过 RAG 技术实现知识检索与问答，能协助市场和品牌部开展工作。
+一个可以完全离线运行的企业知识问答助手。系统加载 `data/` 里的资料，抽取文本、智能分块，用 BM25 与 TF-IDF 混合检索找出最相关的片段，再从片段中组织出带来源和置信度的答案。
+
+仓库里的 `data/` 是**自建的虚构样例语料**（一家虚构的氢能公司「沐光氢能」），用来演示完整的检索与生成链路。换成自己的资料即可变成自己的知识助手：把 PDF、Markdown 或纯文本放进 `data/`，重跑一次即可。
+
+本仓库不包含任何第三方资料。样例语料、示例问答和检索结果都由自建内容生成。
 
 ## 功能
 
-- **知识库构建**：自动加载企业 PDF 资料，清洗文本，智能分块
+- **知识库构建**：自动加载 PDF / Markdown / 纯文本资料，清洗文本，智能分块
 - **混合检索**：BM25 + TF-IDF 双路检索，加权融合，中文无需分词器
 - **智能问答**：从检索片段提取关键信息，结构化输出答案 + 来源 + 置信度
 - **Web 聊天界面**：实时交互问答，展示检索来源与匹配度
@@ -25,16 +28,20 @@
 ## 项目结构
 
 ```
-./
+.
 ├── app.py                 # Flask Web 应用（一键启动聊天界面）
 ├── build_static.py        # 纯前端静态 Demo 构建脚本（生成 dist/index.html）
+├── data/                  # 知识库目录：PDF / Markdown / 纯文本均可
+│   ├── 00_公司资料说明.md
+│   ├── 01_燃料电池产品单页.md
+│   └── 02_解决方案手册.md
 ├── dist/
 │   └── index.html         # 自包含静态 Demo（语料+检索全内嵌，可任意静态托管）
 ├── run.py                 # CLI 入口（兼容旧路径）
 ├── run_cli.py             # CLI 完整实现（批量问答 + 生成 demo.html）
 ├── rag/                   # RAG 核心引擎
 │   ├── __init__.py        # 包入口，导出 RAGEngine
-│   ├── loader.py          # PDF 加载 + 文本清洗 + 智能分块
+│   ├── loader.py          # 资料加载（PDF / 文本）+ 文本清洗 + 智能分块
 │   ├── retriever.py       # BM25 + TF-IDF 混合检索
 │   ├── generator.py       # 答案生成（可插拔 LLM stub）
 │   └── pipeline.py        # 管线串联（RAGEngine）
@@ -43,133 +50,34 @@
 ├── static/
 │   ├── style.css          # 深色主题样式
 │   └── app.js             # 前端交互逻辑
-├── data/                  # 企业 PDF 资料（自包含）
-│   ├── 00_企业资料说明.pdf
-│   ├── 01 沐光氢能2025产品单页.pdf
-│   └── 02 沐光氢能2025宣传册.pdf
-├── requirements.txt       # Python 依赖
-├── demo.html              # CLI 生成的静态演示页
-└── README.md
+└── requirements.txt
 ```
 
-## 快速开始
-
-### 1. 安装依赖
+## 运行
 
 ```bash
+python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
+
+python app.py            # Web 界面 → http://127.0.0.1:5000
+python run_cli.py        # CLI 批量问答 + 生成 demo.html
+python build_static.py   # 生成自包含静态 Demo → dist/index.html
 ```
 
-依赖：Flask, pdfminer.six, scikit-learn, numpy（均为常用库，无外部 API）。
+PDF 语料需要 PyMuPDF；只用 Markdown 或纯文本时可以不装它。
 
-### 2. Web 模式（推荐）
+## 换成自己的资料
 
-```bash
-python app.py
-```
+1. 把资料放进 `data/`（支持 `.pdf`、`.md`、`.txt`）。
+2. 改 `run_cli.py` 和 `app.py` 里的 `SUGGESTED` / `SUGGESTED_QUESTIONS`，换成自己领域的推荐问题。
+3. 重跑 `python run_cli.py` 和 `python build_static.py`，再 `bash publish.sh` 发布。
 
-浏览器打开 `http://127.0.0.1:5000`，在聊天框输入问题或点击左侧推荐问题。
+## 发布到 GitHub Pages
 
-### 3. CLI 模式
+`publish.sh` 会重新构建静态 Demo 并推送到 `gh-pages` 分支。解释器默认用 `python3`，需要指定时用 `PYTHON=/path/to/python3 bash publish.sh`。
 
-```bash
-# 批量跑预设问题
-python run.py
+## 设计说明
 
-# 单个问题
-python run.py --question "沐光氢能成立于哪一年？"
-```
-
-终端打印答案，同时生成 `demo.html`（静态展示页）和 `cli_results.json`（机器可读结果）。
-
-## API 接口
-
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | `/` | 聊天界面 |
-| POST | `/api/ask` | 问答接口，body: `{"question": "..."}` |
-| GET | `/api/stats` | 引擎统计（文档数、分块数等） |
-| GET | `/api/suggest` | 推荐问题列表 |
-
-### 问答接口示例
-
-```bash
-curl -X POST http://127.0.0.1:5000/api/ask \
-  -H "Content-Type: application/json" \
-  -d '{"question": "沐光氢能成立于哪一年？"}'
-```
-
-返回：
-```json
-{
-  "answer": "根据沐光氢能公开资料，关于「沐光氢能成立于哪一年？」：\n• 成立于2010年",
-  "key_points": ["成立于2010年"],
-  "sources": [
-    {"rank": 1, "doc": "00_企业资料说明.pdf", "score": 0.82, "text": "..."}
-  ],
-  "confidence": 0.82,
-  "question": "沐光氢能成立于哪一年？"
-}
-```
-
-## 技术架构
-
-```
-用户问题
-    │
-    ▼
-┌─────────────┐     ┌──────────────┐     ┌───────────────┐
-│  PDF 加载   │────▶│  文本分块    │────▶│  混合检索     │
-│  (pdfminer) │     │  (~400字/块) │     │  BM25+TF-IDF  │
-└─────────────┘     └──────────────┘     └───────┬───────┘
-                                                 │ top-k 片段
-                                                 ▼
-                                        ┌───────────────┐
-                                        │  答案生成     │
-                                        │  (可插拔 LLM) │
-                                        └───────┬───────┘
-                                                 │
-                                                 ▼
-                                    答案 + 关键信息 + 来源 + 置信度
-```
-
-### 检索策略
-
-- **BM25**：关键词精确匹配，char bigram 分词（中文无需分词器）
-- **TF-IDF**：char n-gram (1,2) + 余弦相似度，补充语义模糊匹配
-- **融合**：`score = 0.6 × BM25_norm + 0.4 × TF-IDF_norm`，归一化后加权
-
-## 接入真实 LLM
-
-当前答案生成为**离线 stub**（不调用任何 API），从检索片段提取关键句并结构化输出。
-
-接入真实 LLM（如通义千问、DeepSeek、本地 vLLM 等），只需修改 `rag/generator.py` 中的 `generate_answer()` 函数：
-
-```python
-def generate_answer(question, retrieved_chunks):
-    context = "\n\n".join(c["text"] for c, _ in retrieved_chunks)
-    prompt = f"基于以下资料回答问题。\n资料:\n{context}\n\n问题：{question}\n答案："
-    answer_text = your_llm_client.chat(prompt)  # 替换为你的 LLM 调用
-
-    return {
-        "answer": answer_text,
-        "key_points": [...],
-        "sources": [...],
-        "confidence": ...,
-    }
-```
-
-接口签名不变，Web / CLI 管线无需修改。
-
-## 数据说明
-
-- 来源：沐光氢能公开发布的 3 份 PDF（企业资料说明 + 产品单页 + 2025 宣传册）
-- 敏感性：企业公开资料，可用于比赛展示
-- 已知限制：产品单页 PDF 为图片化设计稿，pdfminer 文本抽取为乱码（已自动清洗过滤）；主要有效信息来自企业资料说明和宣传册
-
-## 限制声明
-
-1. **LLM 为 stub**：当前答案生成不调用 LLM，输出为检索片段的结构化提取。接入真实模型后效果显著提升。
-2. **知识库较薄**：仅 3 份公开 PDF，信息量有限。实际部署建议扩充 FAQ 库、产品手册、技术文档等。
-3. **检索为词法匹配**：BM25 + TF-IDF 为词法级匹配，无语义理解。接入 embedding 模型（如 BGE/M3E）可提升语义检索能力。
-4. **无持久化**：每次启动重新加载 PDF 并建索引（约 2-3 秒）。生产环境建议预建向量库。
+- **为什么要混合检索**：BM25 负责长尾词与专有名词，TF-IDF 负责整体语义分布；中文不分词时用字符 n-gram 近似，两者加权融合比单一路线稳。
+- **为什么不直接调 LLM**：默认走离线 stub，保证任何环境都能跑通、可复现；接真实模型时只要替换 `rag/generator.py` 里的 `generate_answer()`，接口签名保持 `generate_answer(question, retrieved_chunks) -> str`。
+- **PDF 为什么要用 PyMuPDF**：pdfminer 遇到字体没有 ToUnicode 映射时，会把数字直接替换成 U+FFFD，不可逆丢失；PyMuPDF 保留为私有区字符，再由 `_repair_pua_digits` 还原。

@@ -47,9 +47,9 @@ SUGGESTED = [
     "沐光氢能成立于哪一年？",
     "沐光氢能的主打产品是什么？",
     "沐光氢能的核心技术能力有哪些？",
-    "沐光氢能的客户和合作伙伴有哪些？",
-    "沐光氢能的官网是什么？",
-    "燃料电池产品的应用场景有哪些？",
+    "沐光氢能的合作方和客户有哪些？",
+    "沐光氢能的官网和联系方式是什么？",
+    "沐光氢能的应用场景有哪些？",
 ]
 
 HTML_TEMPLATE = r"""<!DOCTYPE html>
@@ -150,8 +150,8 @@ mark { background: rgba(10,142,111,.35); color: #c9f7ea; padding: 0 1px; border-
   </main>
 
   <div class="footer-note">
-    企业知识与智能服务助手 企业知识与智能服务助手<br>
-    知识库：沐光氢能公开宣传资料（敏感性分级 A）· BM25 + TF-IDF 混合检索 · 全部计算在浏览器本地完成
+    企业知识与智能服务助手 · 自建样例语料原型<br>
+    知识库：仓库内自建的虚构样例语料 · BM25 + TF-IDF 混合检索 · 全部计算在浏览器本地完成
   </div>
 </div>
 
@@ -306,7 +306,7 @@ function generateAnswer(question, retrieved) {
   const keySents = extractKeySentences(question, retrieved);
   let answerText;
   if (keySents.length) {
-    answerText = '根据沐光氢能公开资料，关于「' + question + '」：\n' + keySents.map(s => '• ' + s.sent).join('\n');
+    answerText = '根据知识库资料，关于「' + question + '」：\n' + keySents.map(s => '• ' + s.sent).join('\n');
   } else {
     answerText = '根据资料检索，最相关的信息如下：\n• ' + retrieved[0].chunk.text.slice(0, 200).replace(/\n/g, ' ');
   }
