@@ -22,7 +22,6 @@
   document.documentElement.lang = "en";
 
   var PAIRS = [
-    ["氢知", "HydroKnow"],
     ["氢知 HydroKnow · 沐光氢能企业知识智能服务助手", "HydroKnow · Corporate Knowledge & Service Assistant"],
     ["氢知 HydroKnow · 纯前端 RAG", "HydroKnow · fully client-side RAG"],
     ["沐光氢能企业知识智能服务助手 · RAG 检索增强 · 纯前端离线运行", "Corporate knowledge assistant · RAG retrieval · runs fully offline in-browser"],
@@ -81,6 +80,8 @@
   }
   function patchTextNode(n) {
     if (!n.nodeValue || !/[\u4e00-\u9fff]/.test(n.nodeValue)) return;
+    // The logo's standalone Chinese brand mark is redundant next to "HydroKnow".
+    if (n.nodeValue.trim() === "氢知") { n.nodeValue = ""; return; }
     var t = translate(n.nodeValue);
     if (t !== n.nodeValue) n.nodeValue = t;
   }
