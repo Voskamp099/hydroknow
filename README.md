@@ -39,6 +39,9 @@
 │   └── index.html         # 自包含静态 Demo（语料+检索全内嵌，可任意静态托管）
 ├── run.py                 # CLI 入口（兼容旧路径）
 ├── run_cli.py             # CLI 完整实现（批量问答 + 生成 demo.html）
+├── demo/
+│   ├── demo.html          # 离线 Demo 成品（run_cli.py 生成）
+│   └── i18n-en.js         # Demo 的英文表现层
 ├── rag/                   # RAG 核心引擎
 │   ├── __init__.py        # 包入口，导出 RAGEngine
 │   ├── loader.py          # 资料加载（PDF / 文本）+ 文本清洗 + 智能分块

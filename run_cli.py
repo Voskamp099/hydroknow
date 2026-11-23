@@ -24,7 +24,9 @@ sys.path.insert(0, HERE)
 from rag import RAGEngine
 
 DATA_DIR = os.path.join(HERE, "data")
-DEMO_HTML = os.path.join(HERE, "demo.html")
+DEMO_DIR = os.path.join(HERE, "demo")
+DEMO_HTML = os.path.join(DEMO_DIR, "demo.html")
+CLI_RESULTS = os.path.join(DEMO_DIR, "cli_results.json")
 
 PRESET_QUESTIONS = [
     "沐光氢能成立于哪一年？",
@@ -128,6 +130,7 @@ def render_demo_html(results):
 <footer>答案生成为离线 stub（未调用 LLM）。接入真实模型后效果更佳。</footer>
 </body>
 </html>"""
+    os.makedirs(DEMO_DIR, exist_ok=True)
     with open(DEMO_HTML, "w", encoding="utf-8") as f:
         f.write(doc)
     print(f"\n[demo] 已生成 {DEMO_HTML}")
@@ -158,10 +161,10 @@ def main():
     render_demo_html(results)
 
     # 存 JSON
-    json_path = os.path.join(HERE, "cli_results.json")
-    with open(json_path, "w", encoding="utf-8") as f:
+    os.makedirs(DEMO_DIR, exist_ok=True)
+    with open(CLI_RESULTS, "w", encoding="utf-8") as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
-    print(f"[json] 已保存 {json_path}")
+    print(f"[json] 已保存 {CLI_RESULTS}")
     print(f"\n[done] 完成。Web 模式请运行: python app.py")
 
 

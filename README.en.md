@@ -33,6 +33,9 @@ This repository contains no third-party material. The sample corpus, the sample 
 ├── dist/index.html        # self-contained static demo
 ├── run.py                 # CLI entry point
 ├── run_cli.py             # CLI batch mode, writes demo.html
+├── demo/
+│   ├── demo.html          # offline demo output (written by run_cli.py)
+│   └── i18n-en.js         # English presentation layer for the demo
 ├── rag/                   # the RAG engine
 │   ├── loader.py          # document loading, cleaning, chunking
 │   ├── retriever.py       # hybrid BM25 + TF-IDF retrieval

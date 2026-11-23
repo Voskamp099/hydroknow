@@ -3,3 +3,5 @@ __pycache__/
 .DS_Store
 dist/
 *.egg-info/
+# CLI 运行的中间产物，每次都会变
+demo/cli_results.json
