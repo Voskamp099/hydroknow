@@ -118,6 +118,7 @@ def render_demo_html(results):
   .source-text {{ font-size:12px; white-space:pre-wrap; max-height:120px; overflow-y:auto; }}
   footer {{ text-align:center; color:var(--muted); font-size:12px; padding:18px; }}
 </style>
+<script src="i18n-en.js"></script>
 </head>
 <body>
 <header>
